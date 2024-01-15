@@ -1,0 +1,3 @@
+import typing as _t
+
+def args(args:_t.Iterable[str]) -> _t.Generator[str, _t.Any, None]: ...
