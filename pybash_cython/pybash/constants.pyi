@@ -1,9 +1,0 @@
-WHITE:str
-BLUE:str
-GREEN:str
-
-USER_PATH:str
-COMMANDS_PATH:str
-
-USER_NAME:str
-HOST_NAME:str
