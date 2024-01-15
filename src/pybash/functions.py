@@ -91,7 +91,7 @@ def Remove(*args:str):
     
     if type == "normal":
         if os.path.isdir(path):
-            raise Exception("Path is not a dir")
+            raise Exception("Path is not a file")
         os.remove(path)
     
     if type == "forced":
