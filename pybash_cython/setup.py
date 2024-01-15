@@ -30,7 +30,8 @@ def find_files(packages:list[str]):
 
                 if item.name.endswith(".pyx"):
                     yield Extension(
-                        package + os.extsep + item.name[0:-4]
+                        package + os.extsep + item.name[0:-4],
+                        [where + os.sep + item.name]
                     )
 
 setup(
