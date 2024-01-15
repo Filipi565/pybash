@@ -5,8 +5,6 @@ import os
 
 HERE = os.path.dirname(__file__)
 
-sh_reader_path = os.path.join(HERE, "pybash", "sh_reader")
-
 packages = ["pybash", "pybash.sh_reader", "pybash.commands"]
 
 with open(os.path.join(HERE, "README.md")) as f:
