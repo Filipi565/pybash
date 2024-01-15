@@ -33,7 +33,7 @@ def __abspath(path:str): # under development
         return path
 
     print("value without support \"*\"")
-    return "."
+    return None
 
 # Functions
 def ClearTerminal(*_):
@@ -44,35 +44,66 @@ def ClearTerminal(*_):
 
 def ChangeDirectory(directory = "."):
     directory = __abspath(directory)
-    if not os.path.exists(directory) and not os.path.isdir(directory):
-        print("The Path is not a dir or is not found")
+    if directory == None:
         return
+    
+    if not os.path.exists(directory):
+        raise Exception("Path not found")
+
+    if not os.path.isdir(directory):
+        raise Exception("Path is not a directory")
 
     os.chdir(directory)
 
 def ListDirectory(directory = "."):
     directory = __abspath(directory)
+    if directory == None:
+        return
+    
     with os.scandir(directory) as dir:
         for item in dir:
             if item.is_dir():
                 print(f"\033[96m{item.name}\\")
             else:
                 print(f"{WHITE}{item.name}")
+        print(WHITE, end="")
 
-def Remove(path:str):
-    if os.path.isdir(path):
-        print("path is not a file")
-        return
+def Remove(*args:str):
+    if len(args) == 1:
+        path = __abspath(args[0])
+        type = "normal"
+        ignore_errors = False
 
-    try:
+    elif len(args) >= 2:
+        type = "normal"
+        ignore_errors = False
+        for argv in args:
+            if argv == "-rf":
+                type = "forced"
+            
+            elif argv == "--ignore-erros":
+                ignore_errors = True
+
+            else:
+                path = __abspath(argv)
+    else:
+        raise Exception("no argument was given")
+    
+    if type == "normal":
+        if os.path.isdir(path):
+            raise Exception("Path is not a dir")
         os.remove(path)
-    except Exception as e:
-        print(e)
+    
+    if type == "forced":
+        if os.path.isdir(path):
+            shutil.rmtree(path, ignore_errors)
+            return
+        
+        os.remove(path)
 
 def RemoveDirectory(path:str):
     if not os.path.isdir(path):
-        print("path is not a directory")
-        return
+        raise Exception("Path is not a directory")
     
     try:
         os.rmdir(path)
@@ -81,24 +112,6 @@ def RemoveDirectory(path:str):
 
 def MakeDirectory(path):
     os.mkdir(path)
-
-def ForceRemove(path):
-    path = __abspath(path)
-    if path == ".":
-        return
-    
-    if not os.path.exists(path):
-        print("path not found")
-        return
-
-    if os.path.isdir(path):
-        shutil.rmtree(path, ignore_errors=True)
-        return
-
-    try:
-        os.remove(path)
-    except Exception as e:
-        print(e)
 
 def whoami(*_):
     print(USER_NAME)
@@ -109,8 +122,8 @@ def hostname(*_):
 def add_ext_dir(path):
     path = __abspath(path)
     if not os.path.isdir(path):
-        print(f"path {path} is not a dir")
-    
+        raise Exception(f"Path {path} is not a dir")
+
     try:
         sys.path.append(path)
         #print(f"directory: \"{path}\" added to path!")
@@ -124,7 +137,6 @@ cd = ChangeDirectory
 ls = ListDirectory
 echo = print
 delete = rm = Remove
-frm = ForceRemove
 rmdir = RemoveDirectory
 mkdir = MakeDirectory
 #endregion
