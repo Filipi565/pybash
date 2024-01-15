@@ -1,0 +1,14 @@
+README.md
+pyproject.toml
+src/pybash/__init__.py
+src/pybash/__main__.py
+src/pybash/_main.py
+src/pybash/constants.py
+src/pybash/functions.py
+src/pybash/util.py
+src/pybash.egg-info/PKG-INFO
+src/pybash.egg-info/SOURCES.txt
+src/pybash.egg-info/dependency_links.txt
+src/pybash.egg-info/top_level.txt
+src/pybash/commands/__init__.py
+src/pybash/sh_reader/__init__.py
