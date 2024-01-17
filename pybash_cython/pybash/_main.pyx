@@ -4,14 +4,15 @@ import sys
 from .constants import *
 from .functions import *
 from .util import args as _args
-import copy
 
 def import_ext(*args):
+    import copy
     local = dict()
     for ext in args:
         exec(f"from {ext} import *", None, local)
     globals().update(copy.deepcopy(local))
     del local
+    del copy
 
 # This is to solve some bugs
 exit = lambda: None
@@ -22,7 +23,7 @@ def _run(command:str):
     args.remove(args[0])
     args = list(_args(args))
     if __command.startswith((".\\", "./")):
-        __command = __command.replace(__command[0:2], os.path.abspath(__command) + os.sep)
+        __command = os.path.abspath(__command)
         
     if __command in globals():
         try:
@@ -36,6 +37,8 @@ def _run(command:str):
         try:
             sp.Popen([__command, *args]).wait()
         except FileNotFoundError:
+            if os.path.isabs(__command):
+                __command = os.path.basename(__command)
             print(f"Command Not Found: {__command}")
         except (Exception) as e:
             print(f"Error: {e}")
