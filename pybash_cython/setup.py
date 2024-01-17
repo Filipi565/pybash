@@ -36,7 +36,7 @@ def find_files(packages:list[str]):
 
 setup(
     name="pybash",
-    version="1.0.1",
+    version="1.0.3",
     author="Filipi565",
     description="a simple Windows bash shell",
     classifiers=[
