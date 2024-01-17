@@ -6,13 +6,10 @@ from .functions import *
 from .util import args as _args
 
 def import_ext(*args):
-    import copy
     local = dict()
     for ext in args:
         exec(f"from {ext} import *", None, local)
-    globals().update(copy.deepcopy(local))
-    del local
-    del copy
+    globals().update(local)
 
 # This is to solve some bugs
 exit = lambda: None
