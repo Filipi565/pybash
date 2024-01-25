@@ -5,7 +5,7 @@ class _args:
     def args(cls, args: t.Iterable[str]):
         new_argument_bool = False
         new_argument_object = "/\\::" * 100
-        New_Argument :list[str] = None
+        New_Argument: list[str] = None
         for argument in args:
             if not argument:
                 continue
