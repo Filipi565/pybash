@@ -3,7 +3,6 @@ import os
 import sys
 from .constants import *
 from .functions import *
-from .util import args as _args
 
 def import_ext(*args):
     local = dict()
@@ -13,12 +12,19 @@ def import_ext(*args):
 
 # This is to solve some bugs
 exit = lambda: None
+del exit
+del print
+
+from .functions import print as echo
+print = echo
 
 def _run(command:str):
     args = command.split(" ")
     __command = args[0].strip()
     args.remove(args[0])
-    args = list(_args(args))
+    from .util import args as _args
+    args = _args(args)
+    del _args
     if __command.startswith((".\\", "./")):
         __command = os.path.abspath(__command)
         
@@ -43,21 +49,20 @@ def _run(command:str):
         print(f"Error: {e}")
 
 def main():
-    try:
-        while True:
-            if sys.platform.startswith("win"):
-                os.system("title Bash")
-            this_dir = os.getcwd()
-            dir_for_print = this_dir.replace(USER_PATH, "~", 1)
-            print(f"{GREEN}{USER_NAME}@{HOST_NAME} {WHITE}{BLUE}{dir_for_print}{WHITE}$", end=" ")
-            command = input().strip()
-            if not command:
-                continue
+    while True:
+        if sys.platform.startswith("win"):
+            os.system("title Bash")
+        this_dir = os.getcwd()
+        dir_for_print = this_dir.replace(USER_PATH, "~", 1)
+        from builtins import print as _print
+        _print(f"{GREEN}{USER_NAME}@{HOST_NAME} {WHITE}{BLUE}{dir_for_print}{WHITE}$", end=" ")
+        del _print
+        command = input().strip()
+        if not command:
+            continue
 
-            if command == "exit":
-                return 0
-            
-            for command in command.split(";"):
-                _run(command.strip())
-    except:
-        return 1
+        if command == "exit":
+            return 0
+        
+        for command in command.split(";"):
+            _run(command.strip())

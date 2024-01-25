@@ -14,3 +14,7 @@ HOST_NAME = socket.gethostname()
 
 del os
 del socket
+
+class CommandNotFound(Exception):
+    def __init__(self, command_name):
+        super().__init__(f"")

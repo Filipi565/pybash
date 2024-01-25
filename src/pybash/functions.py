@@ -3,7 +3,37 @@ import sys
 import shutil
 from .constants import *
 
+__all__ = [
+    "print",
+    "ClearTerminal",
+    "ChangeDirectory",
+    "ListDirectory",
+    "Remove",
+    "RemoveDirectory",
+    "MakeDirectory",
+    "whoami",
+    "hostname",
+    "add_ext_dir",
+    "cls",
+    "clear",
+    "cd",
+    "ls",
+    "delete",
+    "rm",
+    "rmdir",
+    "mkdir"
+]
+
 #region functions
+def print(*args: object, **kw: str):
+    end = kw.get("end", "\n")
+    for arg in args:
+        if isinstance(arg, str):
+            sys.stdout.write(f"{arg} ")
+        else:
+            sys.stdout.write(f"{repr(arg)} ")
+    sys.stdout.write(end)
+
 def __abspath(path:str): # under development
     if path.startswith("~"):
         path = path.replace("~", USER_PATH, 1)
@@ -27,7 +57,7 @@ def __abspath(path:str): # under development
                 arquivos.clear()
             else:
                 print("value without support \"*\"")
-                return "."
+                return None
         
     if len(arquivos) == 0:
         return path
@@ -35,7 +65,6 @@ def __abspath(path:str): # under development
     print("value without support \"*\"")
     return None
 
-# Functions
 def ClearTerminal(*_):
     if sys.platform.startswith("win"):
         os.system("cls")
@@ -66,7 +95,6 @@ def ListDirectory(directory = "."):
                 print(f"\033[96m{item.name}\\")
             else:
                 print(f"{WHITE}{item.name}")
-        print(WHITE, end="")
 
 def Remove(*args:str):
     if len(args) == 1:
@@ -91,7 +119,7 @@ def Remove(*args:str):
     
     if type == "normal":
         if os.path.isdir(path):
-            raise Exception("Path is not a file")
+            raise Exception("Path is not a dir")
         os.remove(path)
     
     if type == "forced":
@@ -111,7 +139,7 @@ def RemoveDirectory(path:str):
         print(e)
 
 def MakeDirectory(path):
-    os.mkdir(path)
+    os.makedirs(path)
 
 def whoami(*_):
     print(USER_NAME)
@@ -135,7 +163,6 @@ def add_ext_dir(path):
 cls = clear = ClearTerminal
 cd = ChangeDirectory
 ls = ListDirectory
-echo = print
 delete = rm = Remove
 rmdir = RemoveDirectory
 mkdir = MakeDirectory
