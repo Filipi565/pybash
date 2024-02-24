@@ -17,4 +17,4 @@ del socket
 
 class CommandNotFound(Exception):
     def __init__(self, command_name):
-        super().__init__(f"")
+        super().__init__(f"Command not found {command_name}")
