@@ -4,11 +4,9 @@ import sys
 from .constants import *
 from .functions import *
 
-def import_ext(*args):
-    local = dict()
-    for ext in args:
-        exec(f"from {ext} import *", None, local)
-    globals().update(local)
+import_ext = ImportExtType(globals)
+
+del ImportExtType
 
 # This is to solve some bugs
 exit = lambda: None
