@@ -157,6 +157,15 @@ def add_ext_dir(path):
         #print(f"directory: \"{path}\" added to path!")
     except (Exception, BaseException) as e:
         print(f"Error: {e}")
+
+class ImportExtType(object):
+    def __init__(self, globals):
+        self.__globals = globals()
+
+    def __call__(seld, *args):
+        for ext in args:
+            exec(f"from {ext} import *", None, self.__globals)
+
 #endregion
 
 #region Alias
