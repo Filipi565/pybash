@@ -4,7 +4,7 @@ import sys
 from .constants import *
 from .functions import *
 
-import_ext = ImportExtType(globals)
+import_ext = ImportExtType(globals())
 
 del ImportExtType
 
