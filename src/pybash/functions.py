@@ -160,7 +160,7 @@ def add_ext_dir(path):
 
 class ImportExtType(object):
     def __init__(self, globals):
-        self.__globals = globals()
+        self.__globals = globals
 
     def __call__(seld, *args):
         for ext in args:
