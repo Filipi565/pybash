@@ -3,7 +3,7 @@ from setuptools import setup
 packages = ["pybash", "pybash.sh_reader", "pybash.commands"]
 
 def package_data(packages, *types):
-    value: dict[str, list[str]] = dict()
+    value = dict() # type: dict[str, list[str]]
 
     for package in packages:
         value[package] = []
