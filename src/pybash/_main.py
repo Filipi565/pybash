@@ -30,7 +30,7 @@ def _run(command: str):
         try:
             globals()[__command](*args)
         except BaseException as e:
-            print(RED + "Error: %s" % e + WHITE, file=sys.stderr)
+            print(RED + f"Error: {e}" + RESET, file=sys.stderr)
         return
     try:
         sp.Popen([os.path.join(COMMANDS_PATH, __command), *args]).wait()
@@ -40,11 +40,11 @@ def _run(command: str):
         except (FileNotFoundError):
             if os.path.isabs(__command):
                 __command = os.path.basename(__command)
-            print(RED + f"Command Not Found: {__command}" + WHITE, file=sys.stderr)
+            print(RED + f"Command Not Found: {__command}" + RESET, file=sys.stderr)
         except (Exception) as e:
-            print(RED + f"Error: {e}" + WHITE, file=sys.stderr)
+            print(RED + f"Error: {e}" + RESET, file=sys.stderr)
     except Exception as e:
-        print(RED + f"Error: {e}" + WHITE, file=sys.stderr)
+        print(RED + f"Error: {e}" + RESET, file=sys.stderr)
 
 def main() -> int:
     while True:
@@ -53,7 +53,7 @@ def main() -> int:
                 os.system("title Bash")
             this_dir = os.getcwd()
             dir_for_print = this_dir.replace(USER_PATH, "~", 1)
-            print(f"{GREEN}{USER_NAME}@{HOST_NAME} {WHITE}{BLUE}{dir_for_print}{WHITE}$", end=" ")
+            print(f"{GREEN}{USER_NAME}@{HOST_NAME} {RESET}{BLUE}{dir_for_print}{RESET}$", end=" ")
             command = input().strip()
             if not command:
                 continue

@@ -1,7 +1,7 @@
 import os
 import socket
 
-WHITE = "\033[0m"
+RESET = "\033[0m"
 BLUE = "\033[94m"
 GREEN = "\033[92m"
 RED = "\033[31m"

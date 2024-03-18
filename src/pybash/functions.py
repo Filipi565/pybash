@@ -32,7 +32,7 @@ class PrintErrType(object):
         from builtins import print
         print(RED, end="")
         print(*args, file=sys.stderr)
-        print(WHITE, end="")
+        print(RESET, end="")
 
 class ImportExtType(object):
     def __init__(self, globals: t.MutableMapping[str, object]):
@@ -126,7 +126,7 @@ def ListDirectory(directory = "."):
             if item.is_dir():
                 print(f"\033[96m{item.name}\\")
             else:
-                print(f"{WHITE}{item.name}")
+                print(f"{RESET}{item.name}")
 
 def Remove(*args: str):
     if len(args) == 1:
