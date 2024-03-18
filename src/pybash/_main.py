@@ -1,0 +1,71 @@
+import subprocess as sp
+import os
+import sys
+from .constants import *
+from .functions import *
+
+# This is to solve some bugs
+exit = lambda: None
+del exit
+del print
+
+from .functions import ImportExtType
+import_ext = ImportExtType(globals())
+del ImportExtType
+
+from .functions import print as echo
+print = echo
+
+def _run(command: str):
+    args = command.split(" ")
+    __command = args[0].strip()
+    args.remove(args[0])
+    from .util import args as _args
+    args = _args(args)
+    del _args
+    if __command.startswith((".")):
+        __command = os.path.abspath(__command)
+        
+    if __command in globals():
+        try:
+            globals()[__command](*args)
+        except BaseException as e:
+            print(RED + "Error: %s" % e + WHITE, file=sys.stderr)
+        return
+    try:
+        sp.Popen([os.path.join(COMMANDS_PATH, __command), *args]).wait()
+    except (FileNotFoundError):
+        try:
+            sp.Popen([__command, *args]).wait()
+        except (FileNotFoundError):
+            if os.path.isabs(__command):
+                __command = os.path.basename(__command)
+            print(RED + f"Command Not Found: {__command}" + WHITE, file=sys.stderr)
+        except (Exception) as e:
+            print(RED + f"Error: {e}" + WHITE, file=sys.stderr)
+    except Exception as e:
+        print(RED + f"Error: {e}" + WHITE, file=sys.stderr)
+
+def main() -> int:
+    while True:
+        try:
+            if sys.platform.startswith("win"):
+                os.system("title Bash")
+            this_dir = os.getcwd()
+            dir_for_print = this_dir.replace(USER_PATH, "~", 1)
+            print(f"{GREEN}{USER_NAME}@{HOST_NAME} {WHITE}{BLUE}{dir_for_print}{WHITE}$", end=" ")
+            command = input().strip()
+            if not command:
+                continue
+
+            if command == "exit":
+                return 0
+            
+            for command in command.split(";"):
+                _run(command.strip())
+
+        except KeyboardInterrupt:
+            main()
+        
+        except BaseException:
+            return 1
