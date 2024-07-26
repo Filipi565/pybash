@@ -12,6 +12,19 @@ for i, argv in enumerate(sys.argv):
     if argv == "--no-exit":
         no_exit = True
     
+    if ("--version" in sys.argv) or ("-V" in sys.argv):
+        from . import __version__ as version
+        print(version)
+        del version
+        try:
+            sys.argv.remove("--version")
+        except ValueError:
+            pass
+        try:
+            sys.argv.remove("-V")
+        except ValueError:
+            pass
+    
     if argv == "--command":
         for comando in sys.argv[i+1].split(";"):
             run(comando.strip())

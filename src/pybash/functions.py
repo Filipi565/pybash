@@ -7,10 +7,10 @@ from .constants import *
 import typing as t
 import importlib
 
-def _get_all(module):
-    all = getattr(module, "__all__", None) # type: filter[str] | None
+def _get_all(module) -> t.Iterable[str]:
+    all = getattr(module, "__all__", None) # type: list[str] | tuple[str, ...] | None
     if all is not None:
-        yield from all
+       return all
     else:
         for item in dir(module):
             if item[0] == "_":
@@ -27,15 +27,8 @@ def _update_globals(module, globals):
     for item in _get_all(module):
         globals[item] = getattr(module, item)
 
-class PrintErrType(object):
-    def __call__(self, *args: object):
-        from builtins import print
-        print(RED, end="")
-        print(*args, file=sys.stderr)
-        print(RESET, end="")
-
-class ImportExtType(object):
-    def __init__(self, globals: t.MutableMapping[str, object]):
+class _ImportExtType:
+    def __init__(self, globals: t.MutableMapping[str, object], /):
         self.__globals = globals
     
     def __call__(self, *exts: str):
@@ -43,33 +36,32 @@ class ImportExtType(object):
             module = importlib.import_module(ext)
             _update_globals(module, self.__globals)
 
-printerr = PrintErrType()
-
 #region functions
 @t.overload
-def print(*args: object, end: str | None = None, sep: str = " ") -> None: ...
+def print(*values: object, end: str | None = None, sep: str | None = " ", file: t.TextIO | None = None) -> None: ...
 
 def print(*args: object, **kw: str):
-    end = kw.pop("end", os.linesep)
+    end = kw.pop("end", "\n")
     sep = kw.pop("sep", " ")
-    file = kw.pop("file", sys.stdout)
+    file: t.TextIO | None = kw.pop("file", sys.stdout)
     if end is None:
         end = os.linesep
+    if file is None:
+        file = sys.stdout
+    if sep is None:
+        sep = " "
+
     for item in kw:
         raise TypeError(f"print() got an unexpected keyword argument: {item}")
     
-    def arguments(arguments): # type: (object) -> t.Generator[str, t.Any, None]
-        for arg in arguments:
-            if isinstance(arg, str):
-                yield arg
-            else:
-                yield repr(arg)
+    def arguments(arguments): # type: (t.Iterable[object]) -> map[str]
+        return map(str, arguments)
     
     file.write(sep.join(arguments(args)))
-    
     file.write(end)
 
-def _abspath(path:str): # under development
+def _abspath(path: str): # under development
+    assert isinstance(path, str)
     if path.startswith("~"):
         path = path.replace("~", USER_PATH, 1)
     
@@ -88,7 +80,7 @@ def _abspath(path:str): # under development
                     arquivos.append(item.path)
 
             if len(arquivos) == 1:
-                path = arquivos[0] + path[count+1:sys.maxsize]
+                path = arquivos[0] + path[count+1:]
                 arquivos.clear()
             else:
                 print("value without support \"*\"")
@@ -96,12 +88,15 @@ def _abspath(path:str): # under development
         
     if len(arquivos) == 0:
         return path
+    else:
+        print("value without support \"*\"")
+        return None
 
-    print("value without support \"*\"")
-    return None
-
-def ClearTerminal(*_):
-    print("\033[H\033[2J", end="")
+def ClearTerminal():
+    if sys.platform.startswith("win"):
+        os.system("cls")
+    else:
+        os.system("clear")
 
 def ChangeDirectory(directory = "."):
     directory = _abspath(directory)
@@ -124,7 +119,7 @@ def ListDirectory(directory = "."):
     with os.scandir(directory) as dir:
         for item in dir:
             if item.is_dir():
-                print(f"\033[96m{item.name}\\")
+                print(f"{CYAN}{item.name}\\")
             else:
                 print(f"{RESET}{item.name}")
 
@@ -174,7 +169,7 @@ def RemoveDirectory(path: str):
         return
     
     if not os.path.isdir(path):
-        raise Exception("Path is not a directory")
+        raise NotADirectoryError("Path is not a directory")
     
     try:
         os.rmdir(path)
@@ -202,7 +197,7 @@ def add_ext_dir(path):
         sys.path.append(path)
         #print(f"directory: \"{path}\" added to path!")
     except BaseException as e:
-        printerr("Error: %s" % e)
+        print(RED + f"Error: {e}" + RESET, file=sys.stderr)
 #endregion
 
 #region Alias
@@ -214,12 +209,9 @@ rmdir = RemoveDirectory
 mkdir = MakeDirectory
 #endregion
 
-FuncType = type(cd)
-
 def _all_filter(v):
     # type: (str) -> bool
-    return v[0] != "_" and isinstance(globals()[v], FuncType)
+    return v[0] != "_"
 
 __all__ = list(filter(_all_filter, globals()))
 del _all_filter
-del FuncType

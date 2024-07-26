@@ -1,8 +1,24 @@
+from .variables import variables
 import typing as t
 
-class _args:
+class _args(t.Iterable[str]):
+    def __init__(self, args: t.Iterable[str]) -> None:
+       self.__args__ = args
+
+    def __iter__(self) -> t.Generator[str, None, None]:
+        for item in self._step_1(self.__args__):
+            if "$" in item:
+                index = item.index("$")+1
+                var_name = item[index:].split(" ")[0]
+                if var_name in variables:
+                    yield item.replace(f"${var_name}", variables[var_name])
+                else:
+                    raise Exception(f"Cloud not find the variable: \"{var_name}\"")
+            else:
+                yield item
+    
     @classmethod
-    def args(cls, args: t.Iterable[str]):
+    def _step_1(cls, args: t.Iterable[str]):
         new_argument_bool = False
         new_argument_object = "/\\:;" * 100
         New_Argument: list[str] = None
@@ -32,8 +48,6 @@ class _args:
                 New_Argument.append(argument)
             else:
                 yield argument
-        
-        del New_Argument, new_argument_bool, new_argument_object
 
 def args(args: t.Iterable[str]) -> t.List[str]:
-    return list(_args.args(args))
+    return list(_args(args))
