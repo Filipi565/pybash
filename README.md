@@ -19,7 +19,7 @@ This function is used on executing other programs too
 Ex.:
 
 ```bash
-pip install $USERPROFILE\\TemporaryModule
+pip install $USERPROFILE\TemporaryModule
 ```
 
 This is Equivalent to "pip install C:\Users\MyUser\TemporaryModule"
