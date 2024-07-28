@@ -28,6 +28,8 @@ This is Equivalent to "pip install C:\Users\MyUser\TemporaryModule"
 
 Fixed "--command" argument not working
 
-Fixed "import_ext" function now working
+Fixed "import_ext" function not working
+
+Fixed ".\YourProgram.exe" implementation not working
 
 * Upload the License File that i accidentally deleted
