@@ -26,8 +26,11 @@ for i, argv in enumerate(sys.argv):
             pass
     
     if argv == "--command":
-        for comando in sys.argv[i+1].split(";"):
-            run(comando.strip())
+        try:
+            for comando in sys.argv[i+1].split(";"):
+                run(comando.strip())
+        except IndexError:
+            raise RuntimeError("Command not given")
 
 if no_exit:
     sys.exit(main())

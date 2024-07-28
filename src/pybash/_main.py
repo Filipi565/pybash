@@ -1,6 +1,7 @@
 import subprocess as sp
 import os
 import sys
+import types
 from .constants import *
 from .functions import *
 
@@ -27,12 +28,14 @@ def _in_globals(item: str) -> bool:
         else:
             return True
 
+def _cmd_exists(path):
+    return (os.path.exists(path) or os.path.exists(f"{path}.exe"))
+
 def _run(command: str) -> None:
-    args = command.split(" ")
+    from .util import args as _args
+    args = _args(command.split(" "))
     __command = args[0].strip()
     args.remove(args[0])
-    from .util import args as _args
-    args = _args(args)
     del _args
     if __command.startswith("."):
         __command = os.path.abspath(__command)
@@ -43,9 +46,9 @@ def _run(command: str) -> None:
         except BaseException as e:
             print(RED + f"Error: {e}" + RESET, file=sys.stderr)
         return
-    try:
+    if _cmd_exists(os.path.join(COMMANDS_PATH, __command)):
         sp.Popen([os.path.join(COMMANDS_PATH, __command), *args]).wait()
-    except (FileNotFoundError):
+    else:
         try:
             sp.Popen([__command, *args]).wait()
         except (FileNotFoundError):
@@ -54,8 +57,8 @@ def _run(command: str) -> None:
             print(RED + f"Command Not Found: {__command}" + RESET, file=sys.stderr)
         except (Exception) as e:
             print(RED + f"Error: {e}" + RESET, file=sys.stderr)
-    except Exception as e:
-        print(RED + f"Error: {e}" + RESET, file=sys.stderr)
+
+inp_text = f"{GREEN}{USER_NAME}@{HOST_NAME} {RESET}{BLUE}" + "{current_dir}" + f"{RESET}$"
 
 def main() -> int:
     while True:
@@ -64,7 +67,7 @@ def main() -> int:
                 os.system("title Bash")
             this_dir = os.getcwd()
             dir_for_print = this_dir.replace(USER_PATH, "~", 1)
-            print(f"{GREEN}{USER_NAME}@{HOST_NAME} {RESET}{BLUE}{dir_for_print}{RESET}$", end=" ")
+            print(inp_text.format(current_dir=dir_for_print), end=" ")
             command = input().strip()
             if not command:
                 continue

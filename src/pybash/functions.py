@@ -6,6 +6,7 @@ import shutil
 from .constants import *
 import typing as t
 import importlib
+from .util.variables import variables as _variables
 
 def _get_all(module) -> t.Iterable[str]:
     all = getattr(module, "__all__", None) # type: list[str] | tuple[str, ...] | None
@@ -195,9 +196,22 @@ def add_ext_dir(path):
 
     try:
         sys.path.append(path)
-        #print(f"directory: \"{path}\" added to path!")
     except BaseException as e:
         print(RED + f"Error: {e}" + RESET, file=sys.stderr)
+
+def setvar(name, value):
+    _variables[name] = value
+
+def delvar(name):
+    try:
+        del _variables[name]
+    except:
+        raise Exception(f"Cloud not find Variable: {name}")
+    
+def variables():
+    for name, value in _variables.items():
+        print(f"{name}={value}")
+
 #endregion
 
 #region Alias

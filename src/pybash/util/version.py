@@ -7,6 +7,7 @@ class VersionInfo:
             minor: int,
             micro: int,
             /,
+            *,
             beta: Optional[bool] = None,
             alpha: Optional[bool] = None,
             ) -> None:
@@ -17,13 +18,15 @@ class VersionInfo:
             raise ValueError("can not mix beta and alpha")
         self.beta = beta
         self.alpha = alpha
-        
 
     def __eq__(self, value) -> bool:
         if isinstance(value, str):
             value = value.split(".")
 
-        return (self[0] == value[0]) and (self[1] == value[1]) and (self[2] == self[2]) and len(self) == len(value)
+        try:
+            return (self[0] == value[0]) and (self[1] == value[1]) and (self[2] == self[2]) and len(self) == len(value)
+        except IndexError:
+            return False
 
     def __repr__(self) -> str:
         _repr = f"{self.major}.{self.minor}.{self.micro}"

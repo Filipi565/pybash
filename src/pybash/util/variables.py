@@ -3,7 +3,6 @@ __all__ = ["variables"]
 @(lambda f: dict(f()))
 def variables():
     import subprocess as sp
-    import os
 
     kw = dict()
     kw["stdout"] = kw["stdin"] = kw["stderr"] = sp.PIPE
@@ -13,7 +12,4 @@ def variables():
     variables = variables.strip()
     for line in variables.splitlines():
         var_name, var_value = line.split("=")
-        if not os.path.exists(var_value):
-            continue
-        else:
-            yield (var_name, var_value)
+        yield (var_name, var_value)
