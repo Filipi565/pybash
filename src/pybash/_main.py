@@ -33,7 +33,10 @@ def _cmd_exists(path):
 
 def _run(command: str) -> None:
     from .util import args as _args
-    args = _args(command.split(" "))
+    try:
+        args = _args(command.split(" "))
+    except Exception as e:
+        print(RED + f"Error: {e}" + RESET, file=sys.stderr)
     __command = args[0].strip()
     args.remove(args[0])
     del _args
