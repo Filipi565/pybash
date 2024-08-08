@@ -1,5 +1,13 @@
 # PyBash
 
+# Release Notes: 1.3.3
+
+* Envrioment Variables
+
+Chaged the way to call a envrioment variable
+
+from: "$VARNAME" to "$(VARNAME)"
+
 # Release Notes: 1.3.2
 
 * Envrioment Variables
