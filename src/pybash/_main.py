@@ -37,6 +37,7 @@ def _run(command: str) -> None:
         args = _args(command.split(" "))
     except Exception as e:
         print(RED + f"Error: {e}" + RESET, file=sys.stderr)
+        return
     __command = args[0].strip()
     args.remove(args[0])
     del _args
