@@ -8,6 +8,14 @@ Chaged the way to call a envrioment variable
 
 from: "$VARNAME" to "$(VARNAME)"
 
+Ex.:
+
+```bash
+cd $(TEMP)
+```
+
+This is Equivalent to "cd C:\Users\MyUser\AppData\Local\Temp"
+
 # Release Notes: 1.3.2
 
 * Envrioment Variables
