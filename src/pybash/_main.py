@@ -47,7 +47,8 @@ def _run(string: str) -> None:
         print(RED + f"Error: {e}" + RESET, file=sys.stderr)
         return
     command = args[0].strip()
-    args.remove(args[0])
+    
+    del args[0]
     del _args
     if command.startswith("."):
         command = os.path.abspath(command)
