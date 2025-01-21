@@ -17,9 +17,9 @@ class _args(t.Iterable[str]):
             yield item
 
     @classmethod
-    def _get_var_name(cls, string: str):
-        index = string.index("$(")+2
-        return string[index:].split(")")[0]
+    def _get_var_name(cls, string: str, start: str = "$(", end: str = ")"):
+        index = string.index(start)+len(start)
+        return string[index:].split(end)[0]
     
     @classmethod
     def _step_1(cls, args: t.Iterable[str]):
