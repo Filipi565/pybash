@@ -9,7 +9,7 @@ def _get_text_of_process(command: str):
     kw["stdin"] = kw["stdout"] = kw["stderr"] = sp.PIPE
     kw["text"] = True
 
-    process = sp.Popen(args, **kw)
+    process = sp.Popen(args, env=os.environ, **kw)
     stdout, stderr = process.communicate()
 
     if (process.returncode != 0):

@@ -60,7 +60,7 @@ def _run(string: str) -> None:
             print(RED + f"Error: {e}" + RESET, file=sys.stderr)
         return
     try:
-        sp.Popen([_get_command(command), *args]).wait()
+        sp.Popen([_get_command(command), *args], env=os.environ).wait()
     except (FileNotFoundError):
         if os.path.isabs(command):
             command = os.path.basename(command)
