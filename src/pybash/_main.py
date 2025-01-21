@@ -50,17 +50,14 @@ def _run(command: str) -> None:
         except BaseException as e:
             print(RED + f"Error: {e}" + RESET, file=sys.stderr)
         return
-    if _cmd_exists(os.path.join(COMMANDS_PATH, __command)):
-        sp.Popen([os.path.join(COMMANDS_PATH, __command), *args]).wait()
-    else:
-        try:
-            sp.Popen([__command, *args]).wait()
-        except (FileNotFoundError):
-            if os.path.isabs(__command):
-                __command = os.path.basename(__command)
-            print(RED + f"Command Not Found: {__command}" + RESET, file=sys.stderr)
-        except (Exception) as e:
-            print(RED + f"Error: {e}" + RESET, file=sys.stderr)
+    try:
+        sp.Popen([__command, *args]).wait()
+    except (FileNotFoundError):
+        if os.path.isabs(__command):
+            __command = os.path.basename(__command)
+        print(RED + f"Command Not Found: {__command}" + RESET, file=sys.stderr)
+    except (Exception) as e:
+        print(RED + f"Error: {e}" + RESET, file=sys.stderr)
 
 inp_text = f"{GREEN}{USER_NAME}@{HOST_NAME} {RESET}{BLUE}" + "{current_dir}" + f"{RESET}$"
 
