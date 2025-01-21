@@ -31,6 +31,14 @@ def _in_globals(item: str) -> bool:
 def _cmd_exists(path):
     return (os.path.exists(path) or os.path.exists(f"{path}.exe"))
 
+def _get_command(cmd):
+    for path in os.environ["PATH"].split(VAR_SEP):
+        v = os.path.abspath(os.path.join(path, cmd))
+        if (_cmd_exists(v)):
+            return v
+    
+    return v # Default value
+
 def _run(command: str) -> None:
     from .util import args as _args
     try:
@@ -51,7 +59,7 @@ def _run(command: str) -> None:
             print(RED + f"Error: {e}" + RESET, file=sys.stderr)
         return
     try:
-        sp.Popen([__command, *args]).wait()
+        sp.Popen([_get_command(__command), *args]).wait()
     except (FileNotFoundError):
         if os.path.isabs(__command):
             __command = os.path.basename(__command)
