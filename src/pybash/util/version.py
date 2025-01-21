@@ -42,7 +42,7 @@ class VersionInfo:
             return _repr
     
     def __len__(self) -> int:
-        return 3
+        return 3 + sum([self.alpha, self.beta])
 
     def __getitem__(self, index: int) -> int:
         if index == 0:
