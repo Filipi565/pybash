@@ -71,6 +71,8 @@ def _run(string: str) -> None:
 inp_text = f"{GREEN}{USER_NAME}@{HOST_NAME} {RESET}{BLUE}" + "{current_dir}" + f"{RESET}$"
 
 def main() -> int:
+    os.environ["PATH"] += (VAR_SEP + os.path.abspath(os.path.join(__file__, "..", "commands")))
+
     while True:
         try:
             if sys.platform.startswith("win"):
