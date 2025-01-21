@@ -1,5 +1,19 @@
 # PyBash
 
+# Release Notes: 1.4.0
+
+* Fix code
+
+* Add getting the process output as command line
+
+Ex.:
+
+```bash
+echo `where cmd`
+```
+
+output: C:\Windows\System32\cmd.exe
+
 # Release Notes: 1.3.3
 
 * Envrioment Variables
