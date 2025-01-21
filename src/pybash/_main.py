@@ -39,31 +39,31 @@ def _get_command(cmd):
     
     return v # Default value
 
-def _run(command: str) -> None:
+def _run(string: str) -> None:
     from .util import args as _args
     try:
-        args = _args(command.split(" "))
+        args = _args(string.split(" "))
     except Exception as e:
         print(RED + f"Error: {e}" + RESET, file=sys.stderr)
         return
-    __command = args[0].strip()
+    command = args[0].strip()
     args.remove(args[0])
     del _args
-    if __command.startswith("."):
-        __command = os.path.abspath(__command)
+    if command.startswith("."):
+        command = os.path.abspath(command)
         
-    if _in_globals(__command):
+    if _in_globals(command):
         try:
-            globals()[__command](*args)
+            globals()[command](*args)
         except BaseException as e:
             print(RED + f"Error: {e}" + RESET, file=sys.stderr)
         return
     try:
-        sp.Popen([_get_command(__command), *args]).wait()
+        sp.Popen([_get_command(command), *args]).wait()
     except (FileNotFoundError):
-        if os.path.isabs(__command):
-            __command = os.path.basename(__command)
-        print(RED + f"Command Not Found: {__command}" + RESET, file=sys.stderr)
+        if os.path.isabs(command):
+            command = os.path.basename(command)
+        print(RED + f"Command Not Found: {command}" + RESET, file=sys.stderr)
     except (Exception) as e:
         print(RED + f"Error: {e}" + RESET, file=sys.stderr)
 
