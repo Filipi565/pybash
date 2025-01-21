@@ -1,5 +1,9 @@
 # PyBash
 
+# Release Noted: 1.4.1
+
+* Enviroment bug fix
+
 # Release Notes: 1.4.0
 
 * Fix code
