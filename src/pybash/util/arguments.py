@@ -1,5 +1,5 @@
-from .variables import variables
 import typing as t
+import os
 
 class _args(t.Iterable[str]):
     def __init__(self, args: t.Iterable[str]) -> None:
@@ -9,8 +9,8 @@ class _args(t.Iterable[str]):
         for item in self._step_1(self.__args__):
             while ("$(" in item):
                 var_name = self._get_var_name(item)
-                if var_name in variables:
-                    item = item.replace(f"$({var_name})", variables[var_name])
+                if var_name in os.environ:
+                    item = item.replace(f"$({var_name})", os.environ[var_name])
                 else:
                     raise Exception(f"Cloud not find the variable: \"{var_name}\"")
             
@@ -24,7 +24,7 @@ class _args(t.Iterable[str]):
     @classmethod
     def _step_1(cls, args: t.Iterable[str]):
         new_argument_bool = False
-        new_argument_object = "/\\:;" * 100
+        new_argument_object = "/\\:;"
         New_Argument: list[str] = None
         for argument in args:
             if not argument:
@@ -44,7 +44,7 @@ class _args(t.Iterable[str]):
             if argument.endswith(new_argument_object):
                 new_argument_bool = False
                 New_Argument.append(argument)
-                new_argument_object = "/\\::" * 100
+                new_argument_object = "/\\::"
                 yield " ".join(New_Argument)[1:-1]
                 continue
             
