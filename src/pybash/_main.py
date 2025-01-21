@@ -37,7 +37,7 @@ def _get_command(cmd):
         if (_cmd_exists(v)):
             return v
     
-    return v # Default value
+    return cmd # Default value
 
 def _run(string: str) -> None:
     from .util import args as _args
